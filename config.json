@@ -1,17 +1,7 @@
 {
-  "699278323896811551": {
-    "except": [
-      "800527405566656533"
-    ],
+  "1089708524990369812": {
     "filters": [
-      "!wordle"
-    ]
-  },
-  "800527405566656533.disabled": {
-    "filters": [
-      "entropy",
-      "!image",
-      "!hyperlink",
+      "sekai",
       "!sticker"
     ]
   }

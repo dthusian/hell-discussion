@@ -7,6 +7,7 @@ import { latexFilter } from "./latex.mjs";
 import { entropyFilter } from "./entropy.mjs";
 import { stickerFilter } from "./sticker.mjs";
 import { wordleFilter } from "./wordle.mjs";
+import { sekaiFilter } from "./sekai.mjs";
 
 export const filters = {
   "rainworld": rainWorldFilter(),
@@ -17,5 +18,6 @@ export const filters = {
   "latex": latexFilter(),
   "entropy": entropyFilter(),
   "sticker": stickerFilter(),
-  "wordle": wordleFilter()
+  "wordle": wordleFilter(),
+  "sekai": sekaiFilter()
 };

@@ -12,10 +12,10 @@ let bot = new Client({
 });
 let options = JSON.parse(await readFile("config.json"));
 
-function applyFilterSet(msg, ruleset) {
+async function applyFilterSet(msg, ruleset) {
   if(!ruleset) return;
   let appliedFilters = ruleset["filters"];
-  let responses = appliedFilters.map(v => {
+  let responses = Promise.all(appliedFilters.map(async v => {
     let inverted = false;
     if(v.startsWith("!")) {
       inverted = true;
@@ -23,6 +23,7 @@ function applyFilterSet(msg, ruleset) {
     }
     let filterObj = filters[v];
     let passed = filterObj.filter(msg.content, msg);
+    if(passed instanceof Promise) passed = await passed;
     if(inverted) passed = !passed;
     if(passed) {
       return null;
@@ -33,22 +34,19 @@ function applyFilterSet(msg, ruleset) {
         return filterObj.errorMsgInv;
       }
     }
-  }).filter(v => v);
-  return responses;
+  }));
+  return (await responses).filter(v => v);
 }
 
 async function inspectMessage(msg) {
   // filter extraneous things
   if(msg.author.id === "1153388878863024151") return;
-  if(!msg.cleanContent) {
-    console.log("warn: no message content (maybe missing intent?)");
-  }
   console.log(`info: message rcvd: ${msg.cleanContent}`);
   // apply filters
   const cid = msg.channelId.toString();
   const gid = msg.guildId.toString();
   let responses = [];
-  if(options[cid]) responses = responses.concat(applyFilterSet(msg, options[cid]));
+  if(options[cid]) responses = responses.concat(await applyFilterSet(msg, options[cid]));
   if(options[gid] && !options[gid]["except"].includes(cid)) responses = responses.concat(applyFilterSet(msg, options[gid]));
   responses = Array.from(new Set(responses).values());
   if(responses.length) {
