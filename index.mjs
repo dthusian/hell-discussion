@@ -53,7 +53,7 @@ async function inspectMessage(msg) {
     // delete the nonconformant message
     if(msg.deletable) {
       await msg.delete();
-      console.log(`info: deleted message: ${msg.cleanContent} --- reason: ${responses}`)
+      console.log(`info: deleted message: ${msg.cleanContent} --- reason: ${responses.join(" ").replace(/\n/g, " ")}`)
       let embed = EmbedBuilder.from({
         title: "Message Deleted",
         fields: [{

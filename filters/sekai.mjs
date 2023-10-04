@@ -1,9 +1,11 @@
 import { spawn } from "child_process";
 import { writeFile } from "fs/promises";
 
+const SCORE_THRESHOLD = 2200;
+
 function spawnUtil(cmd, args) {
   return new Promise((resolve, reject) => {
-    let proc = spawn("assets/imgdiff", args, {
+    let proc = spawn(cmd, args, {
       stdio: "pipe"
     });
     let data = "";
@@ -27,9 +29,9 @@ async function filter(s, msg) {
       .then(v => v.arrayBuffer())
       .then(v => Buffer.from(v))
       .then(v => writeFile("/tmp/testimage", v));
-    let score = parseFloat(await spawnUtil("assets/imgdiff", ["/tmp/testimage"]));
+    let score = parseFloat(await spawnUtil("imgdiff/target/release/imgdiff", ["/tmp/testimage"]));
     console.log(`info: image ${v.url} score ${score}`);
-    return score > 4000;
+    return score > SCORE_THRESHOLD;
   }));
   return promises.every(v => v);
 }

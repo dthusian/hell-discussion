@@ -1,3 +1,4 @@
 node_modules/
 token.txt
 assets/sekai/
+debug_fft_output.json
